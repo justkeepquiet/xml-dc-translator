@@ -173,7 +173,8 @@ function translate(elementSrc, elementDst, parentElements = [], level = 0, cntAt
 
 function checkSignature(elementSrc, elementDst, parentElements) {
 	let elementDest = elementDst;
-	let passed = 0;
+	let passed = false;
+	let checks = 0;
 
 	if (elementSrc.attributes !== undefined) {
 		const signature = Object.keys(elementSrc.attributes).filter(k => signatureAttrs.includes(k.toLocaleLowerCase()));
@@ -182,30 +183,32 @@ function checkSignature(elementSrc, elementDst, parentElements) {
 		if (elementDest.attributes !== undefined) {
 			signature.forEach(key => {
 				if (elementSrc.attributes[key] === elementDest.attributes[key]) {
-					passed++;
+					checks++;
 				}
 			});
 		}
 
 		// Find element with matching signature and set it as elementDest
-		if (passed !== signature.length && parentElements.length > 0) {
+		if (checks !== signature.length && parentElements.length > 0) {
 			parentElements.forEach(parentElement => {
-				passed = 0;
+				checks = 0;
 
 				signature.forEach(key => {
 					if (parentElement.attributes !== undefined && elementSrc.attributes[key] === parentElement.attributes[key]) {
-						passed++;
+						checks++;
 					}
 				});
 
-				if (passed === signature.length) {
+				if (checks === signature.length) {
 					elementDest = parentElement;
 				} else {
-					passed = signature.length;
+					checks = signature.length;
 				}
 			});
 		}
+
+		passed = checks === signature.length;
 	}
 
-	return { elementDest, passed: !!passed };
+	return { elementDest, passed };
 }
