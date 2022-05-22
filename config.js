@@ -16,7 +16,8 @@ module.exports = {
 		"QuestDialog",
 		"VillagerDialog",
 		"ItemToolTip",
-		"QuestGroupList"
+		"QuestGroupList",
+		"MovieScript"
 	],
 
 	// List of elements to be excluded from the translation (full title or initial part).
