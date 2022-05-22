@@ -43,7 +43,7 @@ targetDirs.forEach(dir => {
 
 		files.forEach(file => {
 			if (path.extname(file.name) === ".xml") {
-				const xmlData = fs.readFileSync(path.join(dirPath, file.name), { encoding: "utf8" });
+				const xmlData = fs.readFileSync(path.join(dirPath, file.name), { encoding: "utf8" }).replace(/&/g, "___amp___");
 				const json = xmljs.xml2js(xmlData, { ignoreComment: true });
 
 				if (xmlData && json) {
