@@ -51,6 +51,7 @@ module.exports = {
 		"string",
 		"title",
 		"desc",
+		"dec",
 		"name",
 		"arg1",
 		"arg2",
