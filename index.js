@@ -43,12 +43,11 @@ targetDirs.forEach(dir => {
 
 		files.forEach(file => {
 			if (path.extname(file.name) === ".xml") {
-				const xmlData = fs.readFileSync(path.join(dirPath, file.name), { encoding: "utf8" }).replace(/&/g, "___amp___");
-				const json = xmljs.xml2js(xmlData, { ignoreComment: true });
+				const targetData = readXml(path.join(dirPath, file.name));
 
-				if (xmlData && json) {
+				if (targetData) {
 					console.log("---> Loading target file:", file.name);
-					targetFiles.set(path.join(dirName, file.name), json);
+					targetFiles.set(path.join(dirName, file.name), targetData);
 				}
 			}
 		});
@@ -59,66 +58,120 @@ targetDirs.forEach(dir => {
 // Find and translate a file
 //
 
-console.log("Translating files...");
-
 if (!fs.existsSync(path.resolve(config.outDir))) {
 	fs.mkdirSync(path.resolve(config.outDir));
 }
 
-targetFiles.forEach((data, file) => {
-	console.log("---> Load target file:", file);
-	const filePath = path.resolve(config.translationDir, file);
+const translationDataArrays = new Map();
+let translationDirPathLast = null;
 
-	if (fs.existsSync(filePath)) {
-		// Read translation file
-		const xmlData = fs.readFileSync(filePath, { encoding: "utf8" }).replace(/&/g, "___amp___");
-		const json = xmljs.xml2js(xmlData, { ignoreComment: true });
+targetFiles.forEach((targetData, targetFile) => {
+	const translationDirPath = path.resolve(config.translationDir, path.dirname(targetFile));
+	let translationDirData = null;
 
-		// console.log(JSON.stringify(json, null, 4));
+	if (translationDirPathLast === null) {
+		translationDirPathLast = translationDirPath;
+	}
 
-		// Attempt to translate file
-		const translatedData = translate(data, json);
-		const translatedFile = path.resolve(config.outDir, file);
+	if (translationDataArrays.has(translationDirPath)) {
+		translationDirData = translationDataArrays.get(translationDirPath);
+	} else if (fs.existsSync(translationDirPath)) {
+		const translationDir = fs.readdirSync(translationDirPath, { withFileTypes: true });
+		const translationArray = [];
 
-		// Write translated data
-		if (translatedData.countAttr > 0) {
-			const dataXml = xmljs.json2xml(translatedData.element, { ignoreComment: true, spaces: 4 }).replace(/___amp___/g, "&");
+		translationDir.forEach((translationFile, i) => {
+			if (path.extname(translationFile.name) === ".xml") {
+				console.log(`---> Loading part ${i + 1}/${translationDir.length - 1}:`, translationFile.name);
 
-			if (!fs.existsSync(path.dirname(translatedFile))) {
-				fs.mkdirSync(path.dirname(translatedFile));
+				const translationFilePath = path.join(translationDirPath, translationFile.name);
+				const translationDataEntry = readXml(translationFilePath);
+
+				if (translationDataEntry) {
+					translationArray.push(translationDataEntry);
+				}
+			}
+		});
+
+		translationDataArrays.set(translationDirPath, translationArray);
+		translationDirData = translationArray;
+	}
+
+	console.log("Translating file:", targetFile);
+
+	if (translationDirData) {
+		let elementSigned = getElementBySignature(targetData, translationDirData, true);
+
+		if (elementSigned === null) {
+			if (translationDirData.length > 1) {
+				console.log("---> Root signature not found. Using file:", targetFile);
 			}
 
-			fs.writeFileSync(translatedFile, dataXml, { encoding: "utf8" });
+			const translationFilePath = path.resolve(config.translationDir, targetFile);
 
-			console.log("------> Translated", translatedData.countElem, "elements with", translatedData.countAttr, "attributes");
-			console.log("---> Write translated data.");
-		} else {
-			console.log("---> Skip.");
+			if (fs.existsSync(translationFilePath)) {
+				elementSigned = readXml(translationFilePath);
+			}
 		}
+
+		if (elementSigned !== null) {
+			const translatedData = translate(targetData, elementSigned);
+
+			// Write translated data
+			if (translatedData.countAttr > 0) {
+				const translatedFile = path.resolve(config.outDir, targetFile);
+
+				if (!fs.existsSync(path.dirname(translatedFile))) {
+					fs.mkdirSync(path.dirname(translatedFile));
+				}
+
+				writeXml(translatedFile, translatedData.result);
+
+				console.log("---> Translated", translatedData.countElem, "elements with", translatedData.countAttr, "attributes");
+			} else {
+				console.log("---> No data to translate. Skip.");
+			}
+		} else {
+			console.log("---> Transtation not found. Skip.");
+		}
+	}
+
+	// Cleanup
+	if (translationDirPath !== translationDirPathLast) {
+		console.log("Cleanup loaded parts.");
+		translationDataArrays.delete(translationDirPath);
+		translationDirPathLast = null;
 	}
 });
 
 console.log("Ended.");
 
+//
+// Functions
+//
 
-function translate(elementSrc, elementDst, parentElements = [], level = 0, cntAttr = 0, cntElem = 0) {
+function readXml(file) {
+	return xmljs.xml2js(fs.readFileSync(file, { encoding: "utf8" }).replace(/&/g, "___amp___"), { ignoreComment: true }).elements[0];
+}
+
+function writeXml(file, data) {
+	return fs.writeFileSync(file, xmljs.json2xml({ elements: [data] }, { ignoreComment: true, spaces: 4 }).replace(/___amp___/g, "&"), { encoding: "utf8" });
+}
+
+function translate(elementSrc, elementDest, parentElements = [], level = 0, cntAttr = 0, cntElem = 0) {
 	let countAttr = cntAttr;
-	let elementDest = elementDst;
 	let countElem = cntElem;
 
 	if (elementSrc.attributes !== undefined && elementDest.attributes !== undefined) {
-		// Check signature and find dest element
-		const signature = checkSignature(elementSrc, elementDst, parentElements);
+		const elementSigned = getElementBySignature(elementSrc, parentElements);
 
 		// Translate attributes
-		if (signature.passed) {
-			elementDest = signature.elementDest;
+		if (elementSigned !== null) {
 			let cnt = 0;
 
 			Object.keys(elementSrc.attributes).forEach(key => {
 				if (translatedAttrs.includes(key.toLocaleLowerCase())) {
-					if (elementSrc.attributes[key] != elementDest.attributes[key]) {
-						elementSrc.attributes[key] = elementDest.attributes[key];
+					if (elementSrc.attributes[key] != elementSigned.attributes[key]) {
+						elementSrc.attributes[key] = elementSigned.attributes[key];
 
 						countAttr++;
 						cnt++;
@@ -132,29 +185,22 @@ function translate(elementSrc, elementDst, parentElements = [], level = 0, cntAt
 		}
 	}
 
-	// Parse elements
 	if (Array.isArray(elementSrc.elements)) {
 		Object.keys(elementSrc.elements).forEach(index => {
 			if (elementDest.elements !== undefined && elementDest.elements[index] !== undefined) {
 				// Process inner text
 				if (elementSrc.elements[index].type === "text") {
-					// Check signature and find dest element
-					const signature = checkSignature(elementSrc, elementDest, parentElements);
+					if (elementSrc.elements[index].text !== elementDest.elements[index].text) {
+						elementSrc.elements[index].text = elementDest.elements[index].text;
 
-					if (signature.passed) {
-						// Translate inner text
-						if (elementSrc.elements[index].text !== signature.elementDest.elements[index].text) {
-							elementSrc.elements[index].text = signature.elementDest.elements[index].text;
-
-							countAttr++;
-							countElem++;
-						}
+						countAttr++;
+						countElem++;
 					}
 				} else {
 					// Process elements
 					const translated = translate(elementSrc.elements[index], elementDest.elements[index], elementDest.elements, level + 1, countAttr, countElem);
 
-					elementSrc.elements[index] = translated.element;
+					elementSrc.elements[index] = translated.result;
 
 					countAttr = translated.countAttr;
 					countElem = translated.countElem;
@@ -164,51 +210,36 @@ function translate(elementSrc, elementDst, parentElements = [], level = 0, cntAt
 	}
 
 	return {
-		element: elementSrc,
+		result: elementSrc,
 		countAttr,
 		countElem,
 		level
 	};
 }
 
-function checkSignature(elementSrc, elementDst, parentElements) {
-	let elementDest = elementDst;
-	let passed = false;
+function getElementBySignature(element, parentElements, strict = false) {
+	let result = null;
 	let checks = 0;
 
-	if (elementSrc.attributes !== undefined) {
-		const signature = Object.keys(elementSrc.attributes).filter(k => signatureAttrs.includes(k.toLocaleLowerCase()));
+	if (element.attributes !== undefined && parentElements.length > 0) {
+		const signature = Object.keys(element.attributes).filter(k => signatureAttrs.includes(k.toLocaleLowerCase()));
 
-		// Check signature of attributes in current position
-		if (elementDest.attributes !== undefined) {
-			signature.forEach(key => {
-				if (elementSrc.attributes[key] === elementDest.attributes[key]) {
-					checks++;
-				}
-			});
-		}
-
-		// Find element with matching signature and set it as elementDest
-		if (checks !== signature.length && parentElements.length > 0) {
-			parentElements.forEach(parentElement => {
+		parentElements.forEach(parentElement => {
+			if (result === null) {
 				checks = 0;
 
 				signature.forEach(key => {
-					if (parentElement.attributes !== undefined && elementSrc.attributes[key] === parentElement.attributes[key]) {
+					if (parentElement.attributes !== undefined && element.attributes[key] === parentElement.attributes[key]) {
 						checks++;
 					}
 				});
 
-				if (checks === signature.length) {
-					elementDest = parentElement;
-				} else {
-					checks = signature.length;
+				if ((!strict || signature.length > 0) && checks === signature.length) {
+					result = parentElement;
 				}
-			});
-		}
-
-		passed = checks === signature.length;
+			}
+		});
 	}
 
-	return { elementDest, passed };
+	return result;
 }

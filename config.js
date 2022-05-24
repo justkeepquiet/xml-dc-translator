@@ -82,6 +82,12 @@ module.exports = {
 		"innerName",
 		"alias",
 		"interactionMenuName",
-		"displayText"
+		"displayText",
+		"description",
+		"attackRange",
+		"attackDistance",
+		"classConcept",
+		"heroStoryDescription",
+		"heroStoryTitle"
 	]
 };
