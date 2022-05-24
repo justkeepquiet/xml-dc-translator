@@ -143,6 +143,17 @@ targetFiles.forEach((targetData, targetFile) => {
 	}
 });
 
+console.log("Copy InputRestrictionData...");
+
+if (!fs.existsSync(path.resolve(config.outDir, "InputRestrictionData"))) {
+	fs.mkdirSync(path.resolve(config.outDir, "InputRestrictionData"));
+}
+
+fs.copyFileSync(
+	path.resolve(config.translationDir, "InputRestrictionData", "InputRestrictionData-0.xml"),
+	path.resolve(config.outDir, "InputRestrictionData", "InputRestrictionData-0.xml")
+);
+
 console.log("Ended.");
 
 //

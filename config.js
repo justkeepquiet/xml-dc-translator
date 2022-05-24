@@ -5,7 +5,7 @@ module.exports = {
 	targetDir: "resources/DataCenter_Final_TW",
 
 	// Directory with the donor DC containing the translation (in our case, EUR DC).
-	translationDir: "resources/DataCenter_Final_EUR",
+	translationDir: "resources/DataCenter_Final_RUS_GF",
 
 	// This directory will contain translated files (which have not been translated are not placed here).
 	outDir: "resources/OUT",
