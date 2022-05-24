@@ -63,11 +63,14 @@ if (!fs.existsSync(path.resolve(config.outDir))) {
 }
 
 const translationDataArrays = new Map();
+const translationDataElements = new Map();
+
 let translationDirPathLast = null;
 
 targetFiles.forEach((targetData, targetFile) => {
 	const translationDirPath = path.resolve(config.translationDir, path.dirname(targetFile));
 	let translationDirData = null;
+	let translationDirDataElements = null;
 
 	if (translationDirPathLast === null) {
 		translationDirPathLast = translationDirPath;
@@ -75,9 +78,11 @@ targetFiles.forEach((targetData, targetFile) => {
 
 	if (translationDataArrays.has(translationDirPath)) {
 		translationDirData = translationDataArrays.get(translationDirPath);
+		translationDirDataElements = translationDataElements.get(translationDirPath);
 	} else if (fs.existsSync(translationDirPath)) {
 		const translationDir = fs.readdirSync(translationDirPath, { withFileTypes: true });
 		const translationArray = [];
+		const translationElements = [];
 
 		translationDir.forEach((translationFile, i) => {
 			if (path.extname(translationFile.name) === ".xml") {
@@ -87,13 +92,20 @@ targetFiles.forEach((targetData, targetFile) => {
 				const translationDataEntry = readXml(translationFilePath);
 
 				if (translationDataEntry) {
+					if (translationDataEntry.elements !== undefined) {
+						translationElements.push(...translationDataEntry.elements);
+					}
+
 					translationArray.push(translationDataEntry);
 				}
 			}
 		});
 
 		translationDataArrays.set(translationDirPath, translationArray);
+		translationDataElements.set(translationDirPath, translationElements);
+
 		translationDirData = translationArray;
+		translationDirDataElements = translationElements;
 	}
 
 	console.log("Translating file:", targetFile);
@@ -102,23 +114,27 @@ targetFiles.forEach((targetData, targetFile) => {
 		let elementSigned = getElementBySignature(targetData, translationDirData, true);
 
 		if (elementSigned === null) {
-			if (translationDirData.length > 1) {
-				console.log("---> Root signature not found. Merging parts.");
-			}
-
-			const elementMerged = {
-				attributes: translationDirData[0].attributes,
-				elements: []
-			};
-
-			translationDirData.forEach(data => {
-				if (data.elements !== undefined && data.elements.length > 0) {
-					elementMerged.elements.push(...data.elements);
+			if (path.dirname(targetFile) === "StrSheet_Item") {
+				if (translationDirData.length > 1) {
+					console.log("---> Root signature not found. Using file:", targetFile);
 				}
-			});
 
-			if (elementMerged.elements.length > 0) {
-				elementSigned = elementMerged;
+				const translationFilePath = path.resolve(config.translationDir, targetFile);
+
+				if (fs.existsSync(translationFilePath)) {
+					elementSigned = readXml(translationFilePath);
+				}
+			} else {
+				if (translationDirData.length > 1) {
+					console.log("---> Root signature not found. Using merged parts...");
+				}
+
+				if (translationDirDataElements.length > 0) {
+					elementSigned = {
+						attributes: translationDirData[0].attributes,
+						elements: translationDirDataElements
+					};
+				}
 			}
 		}
 
@@ -148,6 +164,7 @@ targetFiles.forEach((targetData, targetFile) => {
 	if (translationDirPath !== translationDirPathLast) {
 		console.log("Cleanup loaded parts.");
 		translationDataArrays.delete(translationDirPath);
+		translationDataElements.delete(translationDirPath);
 		translationDirPathLast = null;
 	}
 });
