@@ -114,9 +114,10 @@ targetFiles.forEach((targetData, targetFile) => {
 		let elementSigned = getElementBySignature(targetData, translationDirData, true);
 
 		if (elementSigned === null) {
-			if (path.dirname(targetFile) === "StrSheet_Item") {
+			if (path.dirname(targetFile).startsWith("StrSheet_")) {
+
 				if (translationDirData.length > 1) {
-					console.log("---> Root signature not found. Using file:", targetFile);
+					console.log("---> Root signature not found. Using file for StrSheet:", targetFile);
 				}
 
 				const translationFilePath = path.resolve(config.translationDir, targetFile);
@@ -202,17 +203,23 @@ function translate(elementSrc, elementDest, parentElements = [], level = 0, cntA
 		if (elementSrc.name === "MovieScript") {
 			// Translate MovieScript
 			Object.keys(elementSrc.elements).forEach(index => {
-				if (elementSrc.elements[index] !== undefined && elementDest.elements[index] !== undefined &&
-					elementSrc.elements[index].attributes.string != elementDest.elements[index].attributes.string &&
-					elementDest.elements[index].attributes.string != ""
-				) {
-					elementSrc.elements[index].attributes = {
-						...elementSrc.elements[index].attributes,
-						...elementDest.elements[index].attributes
-					};
+				if (elementSrc.elements[index] !== undefined) {
+					if (elementDest.elements[index] !== undefined &&
+						elementSrc.elements[index].attributes.string != elementDest.elements[index].attributes.string &&
+						elementDest.elements[index].attributes.string != ""
+					) {
+						elementSrc.elements[index].attributes = {
+							...elementSrc.elements[index].attributes,
+							...elementDest.elements[index].attributes
+						};
 
-					countAttr++;
-					countElem++;
+						countAttr++;
+						countElem++;
+					} else {
+						// leave empty or delete this entry?
+						elementSrc.elements[index].attributes.string = "";
+						// delete elementSrc.elements[index];
+					}
 				}
 			});
 		} else {
