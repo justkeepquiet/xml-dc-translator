@@ -199,25 +199,43 @@ function translate(elementSrc, elementDest, parentElements = [], level = 0, cntA
 	let countElem = cntElem;
 
 	if (elementSrc.attributes !== undefined && elementDest.attributes !== undefined) {
-		const elementSigned = getElementBySignature(elementSrc, parentElements);
+		if (elementSrc.name === "MovieScript") {
+			// Translate MovieScript
+			Object.keys(elementSrc.elements).forEach(index => {
+				if (elementSrc.elements[index] !== undefined && elementDest.elements[index] !== undefined &&
+					elementSrc.elements[index].attributes.string != elementDest.elements[index].attributes.string &&
+					elementDest.elements[index].attributes.string != ""
+				) {
+					elementSrc.elements[index].attributes = {
+						...elementSrc.elements[index].attributes,
+						...elementDest.elements[index].attributes
+					};
 
-		// Translate attributes
-		if (elementSigned !== null) {
-			let cnt = 0;
-
-			Object.keys(elementSrc.attributes).forEach(key => {
-				if (translatedAttrs.includes(key.toLocaleLowerCase())) {
-					if (elementSrc.attributes[key] != elementSigned.attributes[key] && elementSigned.attributes[key] != "") {
-						elementSrc.attributes[key] = elementSigned.attributes[key];
-
-						countAttr++;
-						cnt++;
-					}
+					countAttr++;
+					countElem++;
 				}
 			});
+		} else {
+			const elementSigned = getElementBySignature(elementSrc, parentElements);
 
-			if (cnt > 0) {
-				countElem++;
+			// Translate attributes
+			if (elementSigned !== null) {
+				let cnt = 0;
+
+				Object.keys(elementSrc.attributes).forEach(key => {
+					if (translatedAttrs.includes(key.toLocaleLowerCase())) {
+						if (elementSrc.attributes[key] != elementSigned.attributes[key] && elementSigned.attributes[key] != "") {
+							elementSrc.attributes[key] = elementSigned.attributes[key];
+
+							countAttr++;
+							cnt++;
+						}
+					}
+				});
+
+				if (cnt > 0) {
+					countElem++;
+				}
 			}
 		}
 	}
