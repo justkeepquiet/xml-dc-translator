@@ -111,13 +111,12 @@ targetFiles.forEach((targetData, targetFile) => {
 	console.log("Translating file:", targetFile);
 
 	if (translationDirData) {
-		let elementSigned = getElementBySignature(targetData, translationDirData, true);
+		let elementSigned = getElementBySignature(targetData, null, translationDirData, true);
 
 		if (elementSigned === null) {
-			if (path.dirname(targetFile).startsWith("StrSheet_")) {
-
+			if (["StrSheet_Item"].includes(path.dirname(targetFile))) {
 				if (translationDirData.length > 1) {
-					console.log("---> Root signature not found. Using file for StrSheet:", targetFile);
+					console.log("---> Root signature not found. Using file:", targetFile);
 				}
 
 				const translationFilePath = path.resolve(config.translationDir, targetFile);
@@ -223,7 +222,7 @@ function translate(elementSrc, elementDest, parentElements = [], level = 0, cntA
 				}
 			});
 		} else {
-			const elementSigned = getElementBySignature(elementSrc, parentElements);
+			const elementSigned = getElementBySignature(elementSrc, elementDest, parentElements);
 
 			// Translate attributes
 			if (elementSigned !== null) {
@@ -279,28 +278,43 @@ function translate(elementSrc, elementDest, parentElements = [], level = 0, cntA
 	};
 }
 
-function getElementBySignature(element, parentElements, strict = false) {
+function getElementBySignature(elementSrc, elementDest, parentElements, strict = false) {
 	let result = null;
 	let checks = 0;
 
-	if (element.attributes !== undefined && parentElements.length > 0) {
-		const signature = Object.keys(element.attributes).filter(k => signatureAttrs.includes(k.toLocaleLowerCase()));
+	if (elementSrc.attributes !== undefined && parentElements.length > 0) {
+		const signature = Object.keys(elementSrc.attributes).filter(k => signatureAttrs.includes(k.toLocaleLowerCase()));
 
-		parentElements.forEach(parentElement => {
-			if (result === null) {
-				checks = 0;
-
-				signature.forEach(key => {
-					if (parentElement.attributes !== undefined && element.attributes[key] === parentElement.attributes[key]) {
-						checks++;
-					}
-				});
-
-				if ((!strict || signature.length > 0) && checks === signature.length) {
-					result = parentElement;
+		// Check signature of attributes in current position
+		if (elementDest && elementDest.attributes !== undefined) {
+			signature.forEach(key => {
+				if (elementSrc.attributes[key] === elementDest.attributes[key]) {
+					checks++;
 				}
+			});
+
+			if ((!strict || signature.length > 0) && checks === signature.length) {
+				result = elementSrc;
 			}
-		});
+		}
+
+		if (!result) {
+			parentElements.forEach(parentElement => {
+				if (result === null) {
+					checks = 0;
+
+					signature.forEach(key => {
+						if (parentElement.attributes !== undefined && elementSrc.attributes[key] === parentElement.attributes[key]) {
+							checks++;
+						}
+					});
+
+					if ((!strict || signature.length > 0) && checks === signature.length) {
+						result = parentElement;
+					}
+				}
+			});
+		}
 	}
 
 	return result;
