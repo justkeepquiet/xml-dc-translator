@@ -103,13 +103,22 @@ targetFiles.forEach((targetData, targetFile) => {
 
 		if (elementSigned === null) {
 			if (translationDirData.length > 1) {
-				console.log("---> Root signature not found. Using file:", targetFile);
+				console.log("---> Root signature not found. Merging parts.");
 			}
 
-			const translationFilePath = path.resolve(config.translationDir, targetFile);
+			const elementMerged = {
+				attributes: translationDirData[0].attributes,
+				elements: []
+			};
 
-			if (fs.existsSync(translationFilePath)) {
-				elementSigned = readXml(translationFilePath);
+			translationDirData.forEach(data => {
+				if (data.elements !== undefined && data.elements.length > 0) {
+					elementMerged.elements.push(...data.elements);
+				}
+			});
+
+			if (elementMerged.elements.length > 0) {
+				elementSigned = elementMerged;
 			}
 		}
 
