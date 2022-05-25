@@ -130,7 +130,7 @@ module.exports = {
 		StrSheet_ServantAdventureField: { sign: ["id"], attr: ["name"] },
 		StrSheet_ServantSkill: { sign: ["id"], attr: ["name", "tooltip"] },
 		StrSheet_SkillPolishingEffect: { sign: ["id"], attr: ["tooltip", "abilityItem1", "abilityItem1Value", "abilityItem2", "abilityItem2Value", "abilityItem3", "abilityItem3Value", "innerName"] },
-		StrSheet_SkillWindowPopUp: { sign: ["id"], attr: ["string"] },
+		StrSheet_SkillWindowPopUp: { sign: ["id"], attr: ["title", "tip"] },
 		StrSheet_SlashCommand: { sign: ["id"], attr: ["name", "alias", "interactionMenuName"] },
 		StrSheet_SmartQuery: { sign: ["id"], attr: ["string"] },
 		StrSheet_Social: { sign: ["id"], attr: ["string"] },
