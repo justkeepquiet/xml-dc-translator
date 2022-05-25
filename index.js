@@ -140,16 +140,18 @@ targets.forEach(target => {
 
 });
 
-console.log("Copy InputRestrictionData...");
+if (fs.existsSync(path.resolve(config.translationDir, "InputRestrictionData", "InputRestrictionData-0.xml"))) {
+	console.log("Copy InputRestrictionData...");
 
-if (!fs.existsSync(path.resolve(config.outDir, "InputRestrictionData"))) {
-	fs.mkdirSync(path.resolve(config.outDir, "InputRestrictionData"));
+	if (!fs.existsSync(path.resolve(config.outDir, "InputRestrictionData"))) {
+		fs.mkdirSync(path.resolve(config.outDir, "InputRestrictionData"));
+	}
+
+	fs.copyFileSync(
+		path.resolve(config.translationDir, "InputRestrictionData", "InputRestrictionData-0.xml"),
+		path.resolve(config.outDir, "InputRestrictionData", "InputRestrictionData-0.xml")
+	);
 }
-
-fs.copyFileSync(
-	path.resolve(config.translationDir, "InputRestrictionData", "InputRestrictionData-0.xml"),
-	path.resolve(config.outDir, "InputRestrictionData", "InputRestrictionData-0.xml")
-);
 
 console.log("Ended.");
 
@@ -177,7 +179,8 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 				if (elementSrc.elements[index] !== undefined) {
 					if (elementDest.elements[index] !== undefined &&
 						elementSrc.elements[index].attributes.string != elementDest.elements[index].attributes.string &&
-						(elementDest.elements[index].attributes.string != "" || !elementConf.keep)
+						(elementDest.elements[index].attributes.string != "" || !elementConf.keep) &&
+						(!config.pattern || config.pattern.test(elementSrc.elements[index].attributes.string))
 					) {
 						elementSrc.elements[index].attributes = {
 							...elementSrc.elements[index].attributes,
@@ -204,6 +207,7 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 					if (elementConf.attr !== undefined && elementConf.attr.map(a => a.toLocaleLowerCase()).includes(key.toLocaleLowerCase())) {
 						if (elementSigned.attributes[key] !== undefined &&
 							(elementSigned.attributes[key] != "" || !elementConf.keep) &&
+							(!config.pattern || config.pattern.test(elementSrc.attributes[key])) &&
 							elementSrc.attributes[key] != elementSigned.attributes[key]
 						) {
 							elementSrc.attributes[key] = elementSigned.attributes[key];
@@ -227,7 +231,10 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 			if (elementDest.elements !== undefined && elementDest.elements[index] !== undefined) {
 				// Process inner text
 				if (elementSrc.elements[index].type === "text") {
-					if (elementSrc.elements[index].text !== elementDest.elements[index].text && (elementDest.elements[index].text != "" || !elementConf.keep)) {
+					if (elementSrc.elements[index].text !== elementDest.elements[index].text &&
+						(elementDest.elements[index].text != "" || !elementConf.keep) &&
+						(!config.pattern || config.pattern.test(elementSrc.elements[index].text))
+					) {
 						elementSrc.elements[index].text = elementDest.elements[index].text;
 
 						countAttr++;

@@ -1,15 +1,56 @@
 "use strict";
 
+// Selected profile.
+const PROFILE = 1;
+
+// Config profiles.
+const profiles = {
+
+	// PROFILE 1.
+	// Main profile (full translation TW -> EUR).
+	1: {
+		// Directory with DC xml files that need to be translated is indicated (in our case, TW DC).
+		targetDir: "resources/DataCenter_Final_TW",
+
+		// Directory with the donor DC containing the translation (in our case, EUR DC).
+		translationDir: "resources/DataCenter_Final_EUR",
+
+		// This directory will contain translated files (which have not been translated are not placed here).
+		outDir: "resources/OUT_EUR"
+	},
+
+	// PROFILE 2.
+	// Main profile (full translation TW -> RUS).
+	2: {
+		// Directory with DC xml files that need to be translated is indicated (in our case, TW DC).
+		targetDir: "resources/DataCenter_Final_TW",
+
+		// Directory with the donor DC containing the translation (in our case, EUR DC).
+		translationDir: "resources/DataCenter_Final_RUS",
+
+		// This directory will contain translated files (which have not been translated are not placed here).
+		outDir: "resources/OUT_RUS"
+	},
+
+	// PROFILE 10.
+	// For strings mergings from other DCs (e.g. item names, etc.)
+	// Place your translated DC or it's part into "targetDir", and DC contains translation of untranslated
+	// string into "translationDir", after translation process is ended, new files will be placed to "outDir".
+	10: {
+		// Translate only strings matching the given pattern.
+		//    \\p{Script=Han} - strings, contains chinese characters.
+		//    ^$ - empty strings.
+		//    | - symbol of logic "or".
+		pattern: new RegExp("\\p{Script=Han}|^$", "u"),
+
+		// Directories settings.
+		targetDir: "resources/OUT",
+		translationDir: "resources/ITEMS_TRANS",
+		outDir: "resources/OUT_NEW"
+	}
+};
+
 module.exports = {
-	// Directory with DC xml files that need to be translated is indicated (in our case, TW DC).
-	targetDir: "resources/DataCenter_Final_TW",
-
-	// Directory with the donor DC containing the translation (in our case, EUR DC).
-	translationDir: "resources/DataCenter_Final_EUR",
-
-	// This directory will contain translated files (which have not been translated are not placed here).
-	outDir: "resources/OUT",
-
 	// List of element names (directories) that need translation, with configuration statement.
 	//    rootSign - array of root level attributes by which it is necessary to identify links between elements.
 	//    sign - array of attributes by which it is necessary to identify links between elements.
@@ -32,7 +73,7 @@ module.exports = {
 		StrSheet_BattleField: { sign: ["id"], attr: ["string"] },
 		StrSheet_BattlePassMissionKindList: { sign: ["kind"], attr: ["memo"] },
 		StrSheet_Betting: { sign: ["id"], attr: ["string"] },
-		StrSheet_BFInfoBoard: { sign: ["id"], attr: ["string"] }, // test
+		StrSheet_BFInfoBoard: { sign: ["id"], attr: ["string"] },
 		StrSheet_Board: { sign: ["id"], attr: ["string"] },
 		StrSheet_BrokerageOptionCategory: { sign: ["type", "id"], attr: ["string"] },
 		StrSheet_BuyMenu: { sign: ["id"], attr: ["string"] },
@@ -83,7 +124,7 @@ module.exports = {
 		StrSheet_GuildCompetition: { sign: ["id"], attr: ["string"] },
 		StrSheet_GuildMail: { sign: ["id"], attr: ["string"] },
 		StrSheet_GuildQuest: { sign: ["id"], attr: ["string"] },
-		StrSheet_HelpData: { sign: ["id"], attr: [] }, //
+		StrSheet_HelpData: { sign: ["id"], attr: [] },
 		StrSheet_HeroSkill: { sign: ["id", "templateId"], attr: ["name", "tooltip"] },
 		StrSheet_HeroSkin: { sign: ["id"], attr: ["name", "description", "attackRange", "attackDistance", "classConcept", "heroStoryDescription", "heroStoryTitle"] },
 		StrSheet_HuntingZoneEvent: { sign: ["id"], attr: ["string"] },
@@ -154,12 +195,14 @@ module.exports = {
 		StrSheet_VIPStoreAvatar: { sign: ["id"], attr: ["string"] },
 		StrSheet_WorkObject: { sign: ["id"], attr: ["string"] },
 		StrSheet_ZoneName: { sign: ["id"], attr: ["string"] },
-		//
-		// CustomizePadButtonData: { sign: ["id"], attr: ["name"] },
+		// CustomizePadButtonData: { sign: ["id"], attr: ["name"] }, // contains issues. check?
 		QuestDialog: { rootSign: ["id", "huntingZoneId"], sign: ["id", "huntingZoneId", "prevId", "villagerId"] },
 		VillagerDialog: { rootSign: ["id", "huntingZoneId"], sign: ["id", "endSocial"] },
 		ItemToolTip: { sign: ["eng"], attr: ["displayText"] },
 		QuestGroupList: { sign: ["id"], attr: ["name", "dec"] },
 		MovieScript: { sign: ["id"], attr: ["string", "duration", "startTime"] }
-	}
+	},
+
+	// Assign selected config profile.
+	...profiles[PROFILE]
 };
