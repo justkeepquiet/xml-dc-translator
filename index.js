@@ -189,7 +189,9 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 
 						countAttr++;
 						countElem++;
-					} else {
+					}
+
+					if (elementDest.elements[index] === undefined) {
 						delete elementSrc.elements[index];
 					}
 				}
