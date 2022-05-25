@@ -109,7 +109,7 @@ module.exports = {
 		StrSheet_Party: { sign: ["readableId"], attr: ["string"] },
 		StrSheet_PassiveMainString: { sign: ["type", "id", "name"], attr: ["string"] },
 		StrSheet_PassiveStatsDefine: { sign: ["type", "id"], attr: ["string"] },
-		StrSheet_Passivity: { sign: ["id"], attr: ["name"] },
+		StrSheet_Passivity: { sign: ["id"], attr: ["name", "tooltip"] },
 		StrSheet_Petition: { sign: ["id"], attr: ["string"] },
 		StrSheet_PetitionTitle: { sign: ["readableId"], attr: ["string"] },
 		StrSheet_Politics: { sign: ["id"], attr: ["string"] },
