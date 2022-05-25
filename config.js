@@ -154,7 +154,7 @@ module.exports = {
 		StrSheet_WorkObject: { sign: ["id"], attr: ["string"] },
 		StrSheet_ZoneName: { sign: ["id"], attr: ["string"] },
 		//
-		// CustomizePadButtonData: { sign: ["id"], attr: ["name"] },
+		CustomizePadButtonData: { sign: ["id"], attr: ["name"] },
 		QuestDialog: { rootSign: ["id", "huntingZoneId"], sign: ["id", "huntingZoneId", "prevId", "villagerId"] },
 		VillagerDialog: { rootSign: ["id", "huntingZoneId"], sign: ["id", "endSocial"] },
 		ItemToolTip: { sign: ["eng"], attr: ["displayText"] },
