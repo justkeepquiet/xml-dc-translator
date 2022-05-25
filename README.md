@@ -2,7 +2,7 @@
 
 Utility for auto-translating the Tera DataCenter based on XML files.   
 You can unpack and pack the DataCenter using the https://github.com/vezel-dev/novadrop.   
-For correct repacking the DC of patch 100.02, you need to use an [updated XSD files](https://drive.google.com/file/d/1zrOtQ2zOg7wvUjxldbrwmfE39lmpne2I/view?usp=sharing).
+For correct repacking the DC of patch 100.02, you need to use an [updated XSD files](https://drive.google.com/drive/folders/1U1w4GgEgEoeayX3dmMryIX70ztdisCl9?usp=sharing).
 
 ## Usage
 
