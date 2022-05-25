@@ -108,18 +108,12 @@ targets.forEach(target => {
 		if (target.config.rootSign !== undefined && target.config.rootSign.length > 0) {
 			// If root signature defined, try to find data in translation data array
 			signedTransData = getElementBySignature(target.config.rootSign.map(s => s.toLocaleLowerCase()), target.data, null, transData, true);
-		} else {
+		} else if (transElements.length > 0) {
 			// If root element not specified, merge all data from all translation data arrays
-			if (transData.length > 1) {
-				console.log("---> Root signature not found. Using merged parts...");
-			}
-
-			if (transElements.length > 0) {
-				signedTransData = {
-					attributes: transData[0].attributes,
-					elements: transElements
-				};
-			}
+			signedTransData = {
+				attributes: transData[0].attributes,
+				elements: transElements
+			};
 		}
 
 		if (signedTransData !== null) {
