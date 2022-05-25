@@ -202,7 +202,10 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 
 				Object.keys(elementSrc.attributes).forEach(key => {
 					if (elementConf.attr !== undefined && elementConf.attr.map(a => a.toLocaleLowerCase()).includes(key.toLocaleLowerCase())) {
-						if (elementSrc.attributes[key] != elementSigned.attributes[key] && elementSigned.attributes[key] != "") {
+						if (elementSigned.attributes[key] !== undefined &&
+							elementSigned.attributes[key] != "" &&
+							elementSrc.attributes[key] != elementSigned.attributes[key]
+						) {
 							elementSrc.attributes[key] = elementSigned.attributes[key];
 
 							countAttr++;
