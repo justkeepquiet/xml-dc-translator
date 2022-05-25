@@ -35,7 +35,7 @@ module.exports = {
 		StrSheet_Board: { sign: ["id"], attr: ["string"] },
 		StrSheet_BrokerageOptionCategory: { sign: ["type", "id"], attr: ["string"] },
 		StrSheet_BuyMenu: { sign: ["id"], attr: ["string"] },
-		StrSheet_Card: { sign: ["id"], attr: ["tooltip1", "tooltip2"] },
+		StrSheet_Card: { sign: ["id"], attr: ["name", "tooltip1", "tooltip2"] },
 		StrSheet_CardCombineList: { sign: ["id"], attr: ["name"] },
 		StrSheet_CardSystem: { sign: ["id"], attr: ["string"] },
 		StrSheet_Charm: { sign: ["id"], attr: ["string", "tooltip"] },
