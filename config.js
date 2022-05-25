@@ -121,7 +121,7 @@ module.exports = {
 		StrSheet_Reputation: { sign: ["id"], attr: ["string"] },
 		StrSheet_ReturnUserGuide: { sign: ["id"], attr: ["string"] },
 		StrSheet_RewardMessage: { sign: ["id"], attr: ["string"] },
-		StrSheet_Rune: { sign: ["id"], attr: ["string"] },
+		StrSheet_Rune: { sign: ["id"], attr: ["name"] },
 		StrSheet_ScenarioDungeon: { sign: ["id"], attr: ["string"] },
 		StrSheet_Seren: { sign: ["id"], attr: ["string"] },
 		StrSheet_Servant: { sign: ["id"], attr: ["string"] },
