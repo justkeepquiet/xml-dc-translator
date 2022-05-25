@@ -190,9 +190,7 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 						countAttr++;
 						countElem++;
 					} else {
-						// leave empty or delete this entry?
-						elementSrc.elements[index].attributes.string = "";
-						// delete elementSrc.elements[index];
+						delete elementSrc.elements[index];
 					}
 				}
 			});

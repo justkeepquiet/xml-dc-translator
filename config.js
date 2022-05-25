@@ -200,7 +200,7 @@ module.exports = {
 		VillagerDialog: { rootSign: ["id", "huntingZoneId"], sign: ["id", "endSocial"] },
 		ItemToolTip: { sign: ["eng"], attr: ["displayText"] },
 		QuestGroupList: { sign: ["id"], attr: ["name", "dec"] },
-		MovieScript: { sign: ["id"], attr: ["string", "duration", "startTime"] }
+		MovieScript: { rootSign: ["id"], sign: ["id"], attr: ["string", "duration", "startTime"] }
 	},
 
 	// Assign selected config profile.
