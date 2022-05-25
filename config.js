@@ -109,7 +109,7 @@ module.exports = {
 		StrSheet_Party: { sign: ["readableId"], attr: ["string"] },
 		StrSheet_PassiveMainString: { sign: ["type", "id", "name"], attr: ["string"] },
 		StrSheet_PassiveStatsDefine: { sign: ["type", "id"], attr: ["string"] },
-		StrSheet_Passivity: { sign: ["id"], attr: ["string"] },
+		StrSheet_Passivity: { sign: ["id"], attr: ["name"] },
 		StrSheet_Petition: { sign: ["id"], attr: ["string"] },
 		StrSheet_PetitionTitle: { sign: ["readableId"], attr: ["string"] },
 		StrSheet_Politics: { sign: ["id"], attr: ["string"] },
@@ -154,6 +154,7 @@ module.exports = {
 		StrSheet_WorkObject: { sign: ["id"], attr: ["string"] },
 		StrSheet_ZoneName: { sign: ["id"], attr: ["string"] },
 		//
+		// CustomizePadButtonData: { sign: ["id"], attr: ["name"] },
 		QuestDialog: { rootSign: ["id", "huntingZoneId"], sign: ["id", "huntingZoneId", "prevId", "villagerId"] },
 		VillagerDialog: { rootSign: ["id", "huntingZoneId"], sign: ["id", "endSocial"] },
 		ItemToolTip: { sign: ["eng"], attr: ["displayText"] },
