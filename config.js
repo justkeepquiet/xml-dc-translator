@@ -66,7 +66,7 @@ module.exports = {
 		StrSheet_EnchantPopup: { sign: ["id"], attr: ["string"] },
 		StrSheet_EnchantRecommend: { sign: ["id"], attr: ["string", "title"] },
 		StrSheet_EnchantRenewal: { sign: ["id"], attr: ["string"] },
-		StrSheet_EpPerkData: { sign: ["id"], attr: ["name", "arg1", "arg2", "arg3", "arg4", "uiString1", "uiString2", "uiString3", "uiString4"] },
+		StrSheet_EpPerkData: { sign: ["id"], attr: ["name", "string", "tooltip", "arg1", "arg2", "arg3", "arg4", "uiString1", "uiString2", "uiString3", "uiString4"] },
 		StrSheet_EquipmentSetData: { sign: ["id"], attr: ["string"] },
 		StrSheet_Event: { sign: ["id"], attr: ["string"] },
 		StrSheet_EventDialog: { sign: ["id"], attr: ["string"] },
