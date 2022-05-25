@@ -14,8 +14,9 @@ module.exports = {
 	//    rootSign - array of root level attributes by which it is necessary to identify links between elements.
 	//    sign - array of attributes by which it is necessary to identify links between elements.
 	//    attr - array of attributes to which the translation will be made.
+	//    keep - if true specified, keep old (chinese) for untranslated strings.
 	categories: {
-		StrSheet_Abnormality: { sign: ["id"], attr: ["name", "tooltip"] },
+		StrSheet_Abnormality: { sign: ["id"], attr: ["name", "tooltip"], keep: true },
 		StrSheet_AbnormalityKind: { sign: ["id"], attr: ["name"] },
 		StrSheet_AccessoryTransform: { sign: ["id"], attr: ["string"] },
 		StrSheet_AccountBenefit: { sign: ["id"], attr: ["string"] },
@@ -89,7 +90,7 @@ module.exports = {
 		StrSheet_HuntingZoneEventType: { sign: ["readableId"], attr: ["string"] },
 		StrSheet_InputRestriction: { sign: ["id"], attr: ["string"] },
 		StrSheet_InviteFriend: { sign: ["id"], attr: ["string"] },
-		StrSheet_Item: { sign: ["id"], attr: ["toolTip", "string"] },
+		StrSheet_Item: { sign: ["id"], attr: ["toolTip", "string"], keep: true },
 		StrSheet_KeyGuide: { sign: ["id"], attr: ["string"] },
 		StrSheet_Leaderboards: { sign: ["id"], attr: ["string"] },
 		StrSheet_LoadingImage: { sign: ["id"], attr: ["string"] },
@@ -146,8 +147,8 @@ module.exports = {
 		StrSheet_Tutorial: { sign: ["id"], attr: ["string"] },
 		StrSheet_UI: { sign: ["stringId"], attr: ["string"] },
 		StrSheet_UnidentifiedItem: { sign: ["name"], attr: ["string"] },
-		StrSheet_UserSkill: { sign: ["id", "class", "gender", "race"], attr: ["name", "tooltip"] },
-		StrSheet_VehicleSkill: { sign: ["id", "templateId", "huntingZoneId"], attr: ["name", "tooltip"] },
+		StrSheet_UserSkill: { sign: ["id", "class", "gender", "race"], attr: ["name", "tooltip"], keep: true },
+		StrSheet_VehicleSkill: { sign: ["id", "templateId", "huntingZoneId"], attr: ["name", "tooltip"], keep: true },
 		StrSheet_VIPBenefit: { sign: ["id"], attr: ["string"] },
 		StrSheet_VIPMail: { sign: ["id"], attr: ["string"] },
 		StrSheet_VIPStoreAvatar: { sign: ["id"], attr: ["string"] },

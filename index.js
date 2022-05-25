@@ -177,7 +177,7 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 				if (elementSrc.elements[index] !== undefined) {
 					if (elementDest.elements[index] !== undefined &&
 						elementSrc.elements[index].attributes.string != elementDest.elements[index].attributes.string &&
-						elementDest.elements[index].attributes.string != ""
+						(elementDest.elements[index].attributes.string != "" || !elementConf.keep)
 					) {
 						elementSrc.elements[index].attributes = {
 							...elementSrc.elements[index].attributes,
@@ -203,7 +203,7 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 				Object.keys(elementSrc.attributes).forEach(key => {
 					if (elementConf.attr !== undefined && elementConf.attr.map(a => a.toLocaleLowerCase()).includes(key.toLocaleLowerCase())) {
 						if (elementSigned.attributes[key] !== undefined &&
-							elementSigned.attributes[key] != "" &&
+							(elementSigned.attributes[key] != "" || !elementConf.keep) &&
 							elementSrc.attributes[key] != elementSigned.attributes[key]
 						) {
 							elementSrc.attributes[key] = elementSigned.attributes[key];
@@ -227,7 +227,7 @@ function translate(elementConf, elementSrc, elementDest, parentElements = [], le
 			if (elementDest.elements !== undefined && elementDest.elements[index] !== undefined) {
 				// Process inner text
 				if (elementSrc.elements[index].type === "text") {
-					if (elementSrc.elements[index].text !== elementDest.elements[index].text && elementDest.elements[index].text != "") {
+					if (elementSrc.elements[index].text !== elementDest.elements[index].text && (elementDest.elements[index].text != "" || !elementConf.keep)) {
 						elementSrc.elements[index].text = elementDest.elements[index].text;
 
 						countAttr++;
