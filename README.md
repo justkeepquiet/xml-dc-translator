@@ -1,14 +1,15 @@
 # xml-dc-translator
 
+Requires latest version of node.js, download here: https://nodejs.org/.
+
 Utility for auto-translating the Tera DataCenter based on XML files.   
 You can unpack and pack the DataCenter using the https://github.com/vezel-dev/novadrop.   
 For correct repacking the DC of patch 100.02, you need to use an [updated XSD files](https://drive.google.com/drive/folders/1U1w4GgEgEoeayX3dmMryIX70ztdisCl9?usp=sharing).
 
-### Installaction and usage
+### Uusage
 
-1. Install latest node.js.
-2. See `translator_config.js`.
-3. Run `translator.bat` or `node --max_old_space_size=4096 translator`.
+1. See `translator_config.js`.
+2. Run `translator.bat` or `node --max_old_space_size=4096 translator`.
 
 ## Item names restoration tool
 
