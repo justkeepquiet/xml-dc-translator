@@ -2,12 +2,13 @@
   "name": "xml-dc-translator",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "translator.js",
   "scripts": {
-    "start": "node --max_old_space_size=4096 index"
+    "translator": "node --max_old_space_size=4096 translator",
+    "restorator": "node --max_old_space_size=4096 restorator"
   },
   "author": "HSDN <info@hsdn.org>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "xml-js": "^1.6.11"
   }

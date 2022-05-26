@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const xmljs = require("xml-js");
-const config = require("./config");
+const config = require("./translator_config");
 
 //
 // Parse files

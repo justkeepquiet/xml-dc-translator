@@ -7,8 +7,8 @@ For correct repacking the DC of patch 100.02, you need to use an [updated XSD fi
 ### Installaction and usage
 
 1. Install latest node.js.
-2. See `config.js`.
-3. Run `translate.bat` or `node --max_old_space_size=4096 index`.
+2. See `translator_config.js`.
+3. Run `translator.bat` or `node --max_old_space_size=4096 translator`.
 
 ## Item names restoration tool
 
@@ -17,5 +17,5 @@ The this tool compares the unique parameters of the item and finds a similar ite
 
 ### Usage
 
-1. See `restorate_config.js`.
-2. Run `restorate.bat` or `node --max_old_space_size=4096 restorate`.
+1. See `restorator_config.js`.
+2. Run `restorator.bat` or `node --max_old_space_size=4096 restorator`.

@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const xmljs = require("xml-js");
-const config = require("./restorate_config");
+const config = require("./restorator_config");
 
 //
 // Parse files
