@@ -45,8 +45,8 @@ const profiles = {
 
 		// Directories settings.
 		targetDir: "resources/OUT",
-		translationDir: "resources/ITEMS_TRANS",
-		outDir: "resources/OUT_NEW"
+		translationDir: "resources/TRANS",
+		outDir: "resources/OUT"
 	}
 };
 
@@ -189,7 +189,7 @@ module.exports = {
 		StrSheet_UI: { sign: ["stringId"], attr: ["string"] },
 		StrSheet_UnidentifiedItem: { sign: ["name"], attr: ["string"] },
 		StrSheet_UserSkill: { sign: ["id", "class", "gender", "race"], attr: ["name", "tooltip"], keep: true },
-		StrSheet_VehicleSkill: { sign: ["id", "templateId", "huntingZoneId"], attr: ["name", "tooltip"], keep: true },
+		StrSheet_VehicleSkill: { sign: ["id", "templateId", "huntingZoneId"], attr: ["name", "tooltip"] },
 		StrSheet_VIPBenefit: { sign: ["id"], attr: ["string"] },
 		StrSheet_VIPMail: { sign: ["id"], attr: ["string"] },
 		StrSheet_VIPStoreAvatar: { sign: ["id"], attr: ["string"] },

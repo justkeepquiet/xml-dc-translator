@@ -140,18 +140,24 @@ targets.forEach(target => {
 
 });
 
-if (fs.existsSync(path.resolve(config.translationDir, "InputRestrictionData", "InputRestrictionData-0.xml"))) {
-	console.log("Copy InputRestrictionData...");
+//
+// Copy files
+//
 
-	if (!fs.existsSync(path.resolve(config.outDir, "InputRestrictionData"))) {
-		fs.mkdirSync(path.resolve(config.outDir, "InputRestrictionData"));
+["AbuseLetterList", "InputRestrictionData"].forEach(name => {
+	if (fs.existsSync(path.resolve(config.translationDir, name, `${name}-0.xml`))) {
+		console.log("Copy", name);
+
+		if (!fs.existsSync(path.resolve(config.outDir, name))) {
+			fs.mkdirSync(path.resolve(config.outDir, name));
+		}
+
+		fs.copyFileSync(
+			path.resolve(config.translationDir, name, `${name}-0.xml`),
+			path.resolve(config.outDir, name, `${name}-0.xml`)
+		);
 	}
-
-	fs.copyFileSync(
-		path.resolve(config.translationDir, "InputRestrictionData", "InputRestrictionData-0.xml"),
-		path.resolve(config.outDir, "InputRestrictionData", "InputRestrictionData-0.xml")
-	);
-}
+});
 
 console.log("Ended.");
 
