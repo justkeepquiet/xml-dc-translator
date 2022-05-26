@@ -34,6 +34,8 @@ Object.keys(config.categories).forEach(category => {
 				}
 			}
 		});
+	} else {
+		console.error("Target directory", category, "not found.");
 	}
 });
 
@@ -99,6 +101,8 @@ targets.forEach(target => {
 
 			transData = transDataArray;
 			transElements = transElementsArray;
+		} else {
+			console.error("Translation directory", target.category, "not found.");
 		}
 	}
 
