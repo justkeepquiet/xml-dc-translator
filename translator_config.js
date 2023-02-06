@@ -68,6 +68,7 @@ module.exports = {
 		StrSheet_AdminTool: { sign: ["readableId"], attr: ["string"] },
 		StrSheet_Agit: { sign: ["id"], attr: ["string"] },
 		StrSheet_Artisan: { sign: ["id"], attr: ["string", "toolTip"] },
+		StrSheet_AwesomiumWeb: { sign: ["id"], attr: ["string"] },
 		StrSheet_BalloonGuide: { sign: ["id"], attr: ["string"] },
 		StrSheet_Banner: { sign: ["id"], attr: ["string"] },
 		StrSheet_BattleField: { sign: ["id"], attr: ["string"] },
