@@ -183,7 +183,7 @@ function findTranslation(id) {
 				const found = strSheetElements.find(e => e.id == element.id);
 
 				config.attributes.forEach(key => {
-					if (!result && found[key] !== undefined && !config.pattern.test(found[key]) && found[key].trim() != "") {
+					if (!result && found && found[key] !== undefined && !config.pattern.test(found[key]) && found[key].trim() != "") {
 						result = found;
 					}
 				});
